@@ -1,0 +1,69 @@
+# Core data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Configuration management
+PyYAML>=6.0
+
+# Database support
+sqlite3
+
+# Date and time handling
+python-dateutil>=2.8.0
+
+# Logging and monitoring
+logging
+
+# File format support
+openpyxl>=3.1.0
+xlrd>=2.0.0
+pyarrow>=12.0.0
+
+# Testing framework
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+
+# Optional: For advanced analytics and ML
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Optional: For web interface/API
+fastapi>=0.100.0
+uvicorn>=0.23.0
+
+# Optional: For database connections (if using external databases)
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+
+# Optional: For cloud storage integration
+boto3>=1.28.0
+google-cloud-storage>=2.10.0
+
+# Optional: For scheduling and automation
+apscheduler>=3.10.0
+
+# Optional: For email notifications
+smtplib
+
+# Optional: For performance monitoring
+psutil>=5.9.0
+
+# Optional: For data validation extensions
+cerberus>=1.3.4
+jsonschema>=4.17.0
+
+# Optional: For parallel processing
+joblib>=1.3.0
+multiprocessing
+
+# Optional: For caching
+redis>=4.6.0
+
+# Optional: For API documentation
+fastapi>=0.100.0
