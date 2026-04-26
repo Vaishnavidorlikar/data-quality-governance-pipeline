@@ -4,12 +4,12 @@
 
 A production-ready data quality governance pipeline that transforms how organizations manage, validate, and trust their data assets. Built with enterprise consulting best practices to solve critical business challenges through automated validation, intelligent monitoring, and comprehensive governance.
 
-### 🚀 **Live Demo & Working Links**
-- **[� Sample Dashboard](https://looker.com/demo)** - Example data quality dashboard
-- **[🎥 Documentation](https://github.com/search?q=data+quality+pipeline&type=repositories)** - Similar implementations
+### **Live Demo & Working Links**
+- **[Sample Dashboard](https://looker.com/demo)** - Example data quality dashboard
+- **[Documentation](https://github.com/search?q=data+quality+pipeline&type=repositories)** - Similar implementations
 
-### 🔬 **Interactive Demo Instructions**
-**For Recruiters: Experience the Data Quality Pipeline**
+### **Interactive Demo Instructions**
+**Experience the Data Quality Pipeline**
 
 1. **Download Demo Notebook**: 
    - File: `data_quality_demo_colab.ipynb` (26KB)
@@ -21,14 +21,14 @@ A production-ready data quality governance pipeline that transforms how organiza
    - Run all cells to see live demo
 
 3. **What You'll See**:
-   - 📊 Real business data validation (7,000+ records)
-   - 💰 $15M savings calculations
-   - 🎯 Consulting recommendations
-   - 📈 Quality metrics and ROI
+   - Real business data validation (7,000+ records)
+   - $15M savings calculations
+   - Consulting recommendations
+   - Quality metrics and ROI
 
 **Alternative**: Contact dorlikarvaishnavi629@gmail.com for personalized demo
 
-### 🔧 **Kaggle API Setup**
+### **Kaggle API Setup**
 **Automatic Dataset Download:**
 ```bash
 # 1. Install Kaggle package
@@ -49,13 +49,13 @@ python -c "from kaggle_data_loader import KaggleDataLoader; KaggleDataLoader().a
 
 ---
 
-## 📁 **Data Sources Supported**
+## **Data Sources Supported**
 
 ### **Real-World Kaggle Datasets**
-- **[🏦 Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)** - 7,000+ customer records with demographics, services, and churn data
-- **[💳 Financial Transactions](https://www.kaggle.com/datasets/computingvictor/transactions-fraud-datasets)** - Real transaction data for fraud detection and quality validation
-- **[🏪 Bank Customer Churn](https://www.kaggle.com/datasets/gauravtopre/bank-customer-churn-dataset)** - Banking customer data with credit scores and account information
-- **[📊 Credit Card Transactions](https://www.kaggle.com/datasets/priyamchoksi/credit-card-transactions-dataset)** - Large-scale transaction data for quality testing
+- **[Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)** - 7,000+ customer records with demographics, services, and churn data
+- **[Financial Transactions](https://www.kaggle.com/datasets/computingvictor/transactions-fraud-datasets)** - Real transaction data for fraud detection and quality validation
+- **[Bank Customer Churn](https://www.kaggle.com/datasets/gauravtopre/bank-customer-churn-dataset)** - Banking customer data with credit scores and account information
+- **[Credit Card Transactions](https://www.kaggle.com/datasets/priyamchoksi/credit-card-transactions-dataset)** - Large-scale transaction data for quality testing
 
 ### **Primary Business Data Sources**
 - **Customer Data**: CRM databases, customer profiles, transaction records
@@ -78,7 +78,7 @@ The pipeline includes a **customer business dataset** with realistic quality iss
 
 ---
 
-## 🎯 The Business Challenge
+## **The Business Challenge**
 
 ### **Problem Statement**
 Organizations are losing **$15 million annually** due to poor data quality. Critical business decisions are being made on inaccurate data, leading to:
@@ -97,7 +97,7 @@ Organizations are losing **$15 million annually** due to poor data quality. Crit
 
 ---
 
-## 💡 Strategic Solution
+## **Strategic Solution**
 
 ### **Consulting Approach**
 I designed this pipeline using proven enterprise consulting methodologies to address data quality as a **business-critical capability**, not just a technical problem.
@@ -116,7 +116,7 @@ I designed this pipeline using proven enterprise consulting methodologies to add
 
 ---
 
-## 📊 Business Impact & ROI
+## **Business Impact & ROI**
 
 ### **Quantified Results**
 
@@ -142,7 +142,7 @@ I designed this pipeline using proven enterprise consulting methodologies to add
 
 ---
 
-## 🚀 Solution Architecture
+## **Solution Architecture**
 
 ### **Core Capabilities**
 
@@ -172,7 +172,7 @@ I designed this pipeline using proven enterprise consulting methodologies to add
 
 ---
 
-## 🛠️ Technology Stack
+## **Technology Stack**
 
 ### **Enterprise-Grade Technologies**
 - **Python 3.8+**: Industry-standard data processing language
@@ -193,7 +193,7 @@ I designed this pipeline using proven enterprise consulting methodologies to add
 
 ---
 
-## 📋 Implementation & Deployment
+## **Implementation & Deployment**
 
 ### **Quick Start for Business Teams**
 
@@ -237,7 +237,7 @@ compliance:
 
 ---
 
-## 💼 Consulting Engagement Model
+## **Consulting Engagement Model**
 
 ### **Implementation Approach**
 1. **Business Requirements Assessment**: Understanding data quality challenges and objectives
@@ -295,7 +295,7 @@ data-quality-governance-pipeline/
 └── main.py                       # Entry point
 ```
 
-## Tech Stack
+## **Tech Stack**
 
 ### Core Technologies
 - **Python 3.8+**: Primary programming language for data processing and pipeline orchestration
