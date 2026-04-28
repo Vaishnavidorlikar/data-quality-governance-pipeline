@@ -1,0 +1,152 @@
+{
+  "dashboard": {
+    "name": "Data Lake Migration Analytics",
+    "description": "Comprehensive data lake migration metrics and analytics",
+    "refresh_interval": "5m",
+    "data_sources": [
+      {
+        "name": "BigQuery Kaggle Data",
+        "type": "bigquery",
+        "project_id": "${GCP_PROJECT_ID}",
+        "dataset": "kaggle_datasets",
+        "table": "iris_data",
+        "refresh": "5m"
+      },
+      {
+        "name": "BigQuery Adult Income Data",
+        "type": "bigquery",
+        "project_id": "${GCP_PROJECT_ID}",
+        "dataset": "kaggle_datasets",
+        "table": "adult_income",
+        "refresh": "5m"
+      },
+      {
+        "name": "Migration Metrics",
+        "type": "bigquery",
+        "project_id": "${GCP_PROJECT_ID}",
+        "dataset": "migration_metrics",
+        "table": "migration_performance",
+        "refresh": "1m"
+      },
+      {
+        "name": "Pipeline API Data",
+        "type": "web_connector",
+        "url": "http://localhost:8000/api/v1/dashboard/overview",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "refresh": "1m"
+      }
+    ]
+  },
+  "charts": [
+    {
+      "id": "data_volume_migrated",
+      "title": "Data Volume Migrated",
+      "type": "time_series",
+      "dimensions": ["timestamp"],
+      "metrics": ["data_volume_gb"],
+      "chart_type": "area",
+      "refresh": "1m"
+    },
+    {
+      "id": "migration_progress",
+      "title": "Migration Progress",
+      "type": "progress_bar",
+      "dimensions": ["dataset_name"],
+      "metrics": ["completion_percentage"],
+      "chart_type": "bar",
+      "refresh": "5m"
+    },
+    {
+      "id": "data_quality_score",
+      "title": "Data Quality Score",
+      "type": "gauge",
+      "dimensions": [],
+      "metrics": ["quality_score"],
+      "chart_type": "kpis",
+      "refresh": "2m"
+    },
+    {
+      "id": "cost_analysis",
+      "title": "Cost Analysis",
+      "type": "combo",
+      "dimensions": ["date"],
+      "metrics": ["storage_cost", "compute_cost"],
+      "chart_type": "bar_line",
+      "refresh": "5m"
+    },
+    {
+      "id": "error_rates",
+      "title": "Error Rates",
+      "type": "time_series",
+      "dimensions": ["timestamp"],
+      "metrics": ["error_rate"],
+      "chart_type": "line",
+      "refresh": "1m"
+    },
+    {
+      "id": "transfer_speed",
+      "title": "Transfer Speed",
+      "type": "scorecard",
+      "metrics": ["transfer_rate_mbps"],
+      "chart_type": "kpis",
+      "refresh": "30s"
+    }
+  ],
+  "filters": [
+    {
+      "id": "date_range",
+      "type": "date_range",
+      "default": "last_7_days",
+      "options": ["today", "yesterday", "last_7_days", "last_30_days", "custom"]
+    },
+    {
+      "id": "dataset_filter",
+      "type": "select",
+      "dimension": "dataset_name",
+      "options": ["All", "iris_data", "adult_income", "custom"]
+    },
+    {
+      "id": "status_filter",
+      "type": "select",
+      "dimension": "migration_status",
+      "options": ["All", "In Progress", "Completed", "Failed"]
+    }
+  ],
+  "layout": {
+    "grid": "12x8",
+    "components": [
+      {"chart": "transfer_speed", "position": [0, 0, 4, 2]},
+      {"chart": "data_volume_migrated", "position": [0, 2, 8, 3]},
+      {"chart": "migration_progress", "position": [8, 2, 4, 3]},
+      {"chart": "data_quality_score", "position": [0, 5, 4, 3]},
+      {"chart": "cost_analysis", "position": [4, 5, 8, 3]},
+      {"chart": "error_rates", "position": [0, 8, 6, 3]}
+    ]
+  },
+  "sharing": {
+    "public_access": false,
+    "domains": ["yourcompany.com"],
+    "embed_enabled": true,
+    "schedule_exports": true,
+    "export_frequency": "daily"
+  },
+  "alerts": {
+    "enabled": true,
+    "conditions": [
+      {
+        "metric": "error_rate",
+        "operator": "greater_than",
+        "threshold": 5,
+        "notification": "email"
+      },
+      {
+        "metric": "quality_score",
+        "operator": "less_than",
+        "threshold": 90,
+        "notification": "slack"
+      }
+    ]
+  }
+}

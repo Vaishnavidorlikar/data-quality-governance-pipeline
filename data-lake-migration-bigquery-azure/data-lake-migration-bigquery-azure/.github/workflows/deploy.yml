@@ -1,0 +1,39 @@
+name: Deploy to Azure
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run migration pipeline
+      env:
+        BIGQUERY_PROJECT_ID: ${{ secrets.BIGQUERY_PROJECT_ID }}
+        BIGQUERY_CREDENTIALS: ${{ secrets.BIGQUERY_CREDENTIALS }}
+        GCS_CREDENTIALS: ${{ secrets.GCS_CREDENTIALS }}
+      run: |
+        python main.py --mode pipeline --source kaggle_datasets.iris_data --target gcs:${{ secrets.GCS_BUCKET_NAME }}/processed-data/iris_data.csv
+        python main.py --mode pipeline --source kaggle_datasets.adult_income --target gcs:${{ secrets.GCS_BUCKET_NAME }}/processed-data/adult_income.csv
+    
+    - name: GCS Upload Complete
+      run: |
+        echo "Data successfully migrated to Google Cloud Storage"
+        echo "Access GCS Bucket: https://console.cloud.google.com/storage/browser/${{ secrets.GCS_BUCKET_NAME }}/"

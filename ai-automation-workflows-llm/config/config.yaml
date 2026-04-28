@@ -1,0 +1,240 @@
+# AI Automation Workflows Configuration
+
+# LLM Configuration
+llm:
+  default_provider: "mock"  # Options: mock, openai, anthropic
+  
+  # OpenAI Configuration
+  openai:
+    api_key: "${OPENAI_API_KEY}"  # Set environment variable
+    model: "gpt-3.5-turbo"
+    max_tokens: 1000
+    temperature: 0.7
+  
+  # Anthropic Configuration
+  anthropic:
+    api_key: "${ANTHROPIC_API_KEY}"  # Set environment variable
+    model: "claude-3-sonnet-20240229"
+    max_tokens: 1000
+    temperature: 0.7
+  
+  # Mock Configuration (for testing)
+  mock:
+    response_delay: 0.1
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  cors_origins: ["*"]
+  
+# Logging Configuration
+logging:
+  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/app.log"
+
+# Workflow Configuration
+workflows:
+  # Email Agent Configuration
+  email_agent:
+    auto_respond: true
+    response_categories: ["support_request", "inquiry", "complaint"]
+    max_response_length: 500
+  
+  # Report Agent Configuration
+  report_agent:
+    default_report_types: ["daily", "weekly", "monthly"]
+    output_formats: ["json", "html", "pdf"]
+    save_reports: true
+    reports_directory: "data/reports"
+  
+  # Summarizer Configuration
+  summarizer:
+    default_summary_length: 250
+    max_key_points: 5
+    supported_types: ["general", "executive", "detailed", "brief"]
+  
+  # Customer Support Configuration
+  customer_support:
+    auto_escalation: true
+    escalation_triggers: ["urgent", "emergency", "critical"]
+    knowledge_base_file: "data/knowledge_base.json"
+    ticket_storage: "data/tickets"
+
+# Data Configuration
+data:
+  # Sample data directory
+  sample_inputs_directory: "data/sample_inputs"
+  
+  # Database Configuration (if using database)
+  database:
+    url: "sqlite:///data/automation.db"  # Default to SQLite
+    echo: false
+  
+  # File Storage
+  storage:
+    reports_directory: "data/reports"
+    logs_directory: "logs"
+    temp_directory: "data/temp"
+
+# Security Configuration
+security:
+  # API Keys
+  api_keys:
+    enabled: false
+    header_name: "X-API-Key"
+  
+  # Rate Limiting
+  rate_limiting:
+    enabled: false
+    requests_per_minute: 60
+  
+  # CORS
+  cors:
+    allow_origins: ["*"]
+    allow_credentials: true
+    allow_methods: ["*"]
+    allow_headers: ["*"]
+
+# Monitoring Configuration
+monitoring:
+  # Metrics
+  metrics:
+    enabled: false
+    port: 9090
+  
+  # Health Checks
+  health_checks:
+    enabled: true
+    interval: 30  # seconds
+
+# Development Configuration
+development:
+  # Testing
+  testing:
+    mock_llm: true
+    test_data_directory: "tests/data"
+  
+  # Debugging
+  debug:
+    verbose_logging: false
+    print_requests: false
+    print_responses: false
+
+# Enterprise AI Assistant Configuration
+enterprise_ai:
+  llm_provider: "mock"  # Use same provider as main LLM config
+  voice:
+    rate: 200
+    volume: 0.9
+    voice_id: null  # System default
+  models:
+    gesture_model: "models/gesture_recognition.h5"
+    speech_model: "models/speech_recognition.h5"
+  data:
+    storage_path: "data/enterprise_ai_data/"
+    log_file: "logs/enterprise_ai.log"
+  features:
+    voice_commands: true
+    gesture_control: true
+    data_analysis: true
+    continuous_listening: true
+
+# Gesture Recognition Configuration
+gesture_recognition:
+  model_path: "models/gestures/gesture_classifier.h5"
+  camera:
+    device_id: 0  # Default camera
+    resolution: [640, 480]
+    fps: 30
+  detection:
+    confidence_threshold: 0.5
+    smoothing_window: 5
+    max_hands: 2
+  gestures:
+    - thumbs_up
+    - thumbs_down
+    - peace
+    - rock
+    - paper
+    - scissors
+    - ok
+    - point
+    - open_palm
+    - fist
+
+# Deep Learning Configuration
+deep_learning:
+  models_directory: "models/deep_learning/"
+  training:
+    default_epochs: 50
+    batch_size: 32
+    validation_split: 0.2
+    early_stopping: true
+    patience: 5
+  image_models:
+    default_input_shape: [224, 224, 3]
+    pretrained_weights: true
+  text_models:
+    max_vocab_size: 10000
+    embedding_dim: 128
+    max_sequence_length: 256
+
+# Machine Learning Configuration
+machine_learning:
+  models_directory: "models/sklearn/"
+  cross_validation:
+    folds: 5
+    scoring: "accuracy"
+  hyperparameter_tuning:
+    enabled: true
+    cv_folds: 3
+    n_iter: 50
+  feature_selection:
+    methods: ["selectkbest", "rfe", "pca"]
+    max_features: 50
+  ensemble:
+    voting_classifier: true
+    stacking: true
+
+# Data Analysis Configuration
+data_analysis:
+  output_directory: "data/analysis/"
+  visualizations:
+    default_format: "png"
+    dpi: 300
+    figure_size: [10, 6]
+    style: "seaborn"
+  statistics:
+    significance_level: 0.05
+    correlation_threshold: 0.7
+  preprocessing:
+    handle_missing: "auto"
+    scaling_method: "standard"
+    encoding_method: "auto"
+
+# AIML Configuration
+aiml:
+  patterns_file: "data/aiml/patterns.aiml"
+  learning:
+    enabled: true
+    save_interactions: true
+    learning_rate: 0.1
+  response:
+    default_fallback: "I don't understand. Can you rephrase that?"
+    max_response_length: 200
+
+# Production Configuration
+production:
+  # Performance
+  performance:
+    worker_processes: 4
+    worker_connections: 1000
+  
+  # Scaling
+  scaling:
+    enabled: false
+    min_instances: 1
+    max_instances: 10

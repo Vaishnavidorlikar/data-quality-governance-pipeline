@@ -1,0 +1,81 @@
+{
+  "displayName": "Data Lake Migration Pipeline",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Data Transfer Rate",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuerySource": {
+                  "prometheusQuery": "rate(data_transferred_bytes[5m]) / 1024 / 1024"
+                }
+              },
+              "plotType": "LINE",
+              "legendTemplate": "MB/sec"
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "scale": "LINEAR",
+            "label": "Transfer Rate (MB/sec)"
+          }
+        }
+      },
+      {
+        "title": "Migration Job Status",
+        "table": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuerySource": {
+                  "prometheusQuery": "migration_job_status"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "title": "BigQuery Query Performance",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuerySource": {
+                  "prometheusQuery": "histogram_quantile(0.95, rate(bigquery_query_duration_seconds_bucket[5m]))"
+                }
+              },
+              "plotType": "LINE",
+              "legendTemplate": "95th percentile"
+            }
+          ],
+          "yAxis": {
+            "scale": "LINEAR",
+            "label": "Query Duration (seconds)"
+          }
+        }
+      },
+      {
+        "title": "Storage Utilization",
+        "scorecard": {
+          "gaugeView": {
+            "upperBound": 100,
+            "lowerBound": 0
+          },
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuerySource": {
+                  "prometheusQuery": "storage_utilization_percent"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

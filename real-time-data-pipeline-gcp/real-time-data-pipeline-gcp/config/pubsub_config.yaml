@@ -1,0 +1,163 @@
+# Pub/Sub Configuration for Real-time Data Pipeline
+
+# Project Configuration
+project_id: "${GCP_PROJECT_ID}"
+
+# Pub/Sub Topics Configuration
+topics:
+  realtime-events:
+    name: "realtime-events"
+    description: "Real-time events from data sources"
+    retention_period: "7d"
+    message_retention_duration: "604800s"
+    enable_message_ordering: false
+    
+  pipeline-notifications:
+    name: "pipeline-notifications"
+    description: "Pipeline status and notifications"
+    retention_period: "7d"
+    message_retention_duration: "604800s"
+    enable_message_ordering: true
+    
+  data-quality-alerts:
+    name: "data-quality-alerts"
+    description: "Data quality alerts and notifications"
+    retention_period: "30d"
+    message_retention_duration: "2592000s"
+    enable_message_ordering: true
+
+# Pub/Sub Subscriptions Configuration
+subscriptions:
+  realtime-events-sub:
+    topic: "realtime-events"
+    name: "realtime-events-sub"
+    ack_deadline_seconds: 60
+    message_retention_duration: "600s"
+    enable_message_ordering: false
+    filter: ""
+    
+  pipeline-notifications-sub:
+    topic: "pipeline-notifications"
+    name: "pipeline-notifications-sub"
+    ack_deadline_seconds: 300
+    message_retention_duration: "3600s"
+    enable_message_ordering: true
+    filter: "attributes.event_type IN ('pipeline_start', 'pipeline_complete', 'pipeline_error')"
+    
+  data-quality-alerts-sub:
+    topic: "data-quality-alerts"
+    name: "data-quality-alerts-sub"
+    ack_deadline_seconds: 120
+    message_retention_duration: "1800s"
+    enable_message_ordering: true
+    filter: "attributes.severity IN ('HIGH', 'CRITICAL')"
+
+# Dead Letter Policy Configuration
+dead_letter_policies:
+  realtime-events-dlq:
+    topic: "realtime-events-dlq"
+    max_delivery_attempts: 5
+    
+  pipeline-notifications-dlq:
+    topic: "pipeline-notifications-dlq"
+    max_delivery_attempts: 3
+
+# Publisher Configuration
+publishers:
+  data_generator:
+    topic: "realtime-events"
+    batch_size: 100
+    max_latency: 0.1
+    compression: "gzip"
+    
+  pipeline_monitor:
+    topic: "pipeline-notifications"
+    batch_size: 10
+    max_latency: 1.0
+    compression: "none"
+
+# Subscriber Configuration
+subscribers:
+  dataflow_processor:
+    subscription: "realtime-events-sub"
+    max_outstanding_messages: 1000
+    max_outstanding_bytes: 1048576  # 1MB
+    flow_control: true
+    
+  alert_handler:
+    subscription: "data-quality-alerts-sub"
+    max_outstanding_messages: 100
+    max_outstanding_bytes: 1048576  # 1MB
+    flow_control: true
+
+# Message Schemas
+message_schemas:
+  realtime_event:
+    type: "json"
+    fields:
+      event_id: "string"
+      event_type: "string"
+      timestamp: "timestamp"
+      user_id: "string"
+      session_id: "string"
+      data: "object"
+      source_system: "string"
+      processing_status: "string"
+      
+  pipeline_notification:
+    type: "json"
+    fields:
+      notification_id: "string"
+      pipeline_name: "string"
+      status: "string"
+      timestamp: "timestamp"
+      message: "string"
+      metadata: "object"
+      
+  data_quality_alert:
+    type: "json"
+    fields:
+      alert_id: "string"
+      severity: "string"
+      rule_name: "string"
+      dataset: "string"
+      timestamp: "timestamp"
+      description: "string"
+      affected_records: "integer"
+      recommendations: "array"
+
+# Monitoring and Alerting
+monitoring:
+  metrics:
+    - "pubsub.googleapis.com/topic/message_count"
+    - "pubsub.googleapis.com/subscription/num_undelivered_messages"
+    - "pubsub.googleapis.com/subscription/oldest_unacked_message_age"
+    - "pubsub.googleapis.com/subscription/ack_message_count"
+    - "pubsub.googleapis.com/subscription/pull_ack_message_count"
+    
+  alerts:
+    high_message_backlog:
+      metric: "pubsub.googleapis.com/subscription/num_undelivered_messages"
+      threshold: 1000
+      comparison: "greater_than"
+      duration: "300s"
+      
+    old_messages:
+      metric: "pubsub.googleapis.com/subscription/oldest_unacked_message_age"
+      threshold: 3600
+      comparison: "greater_than"
+      duration: "300s"
+
+# Security Configuration
+security:
+  encryption:
+    kms_key_name: "${KMS_KEY_NAME}"
+    
+  iam:
+    publishers:
+      - "serviceAccount:dataflow-service-account@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+      - "serviceAccount:pipeline-service-account@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+      
+    subscribers:
+      - "serviceAccount:dataflow-service-account@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+      - "serviceAccount:alert-service-account@${GCP_PROJECT_ID}.iam.gserviceaccount.com"

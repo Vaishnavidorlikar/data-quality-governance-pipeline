@@ -1,0 +1,201 @@
+{
+  "workbook": {
+    "name": "Data Lake Migration Analytics",
+    "description": "Enterprise data migration dashboard",
+    "location": "eastus",
+    "resource_group": "data-analytics-rg",
+    "data_sources": [
+      {
+        "name": "Data Lake Storage",
+        "type": "azure_data_lake",
+        "account": "yourdatalakeaccount",
+        "filesystem": "analytics",
+        "path": "/processed/metrics/"
+      },
+      {
+        "name": "Application Insights",
+        "type": "app_insights",
+        "app_id": "your-app-id",
+        "metrics": ["requests", "exceptions", "dependencies"]
+      },
+      {
+        "name": "Data Volume",
+        "type": "log_analytics",
+        "workspace_id": "your-workspace-id",
+        "queries": [
+          "Perf | where ObjectName == 'Data Pipeline'",
+          "AzureDiagnostics | where Category == 'DataMigration'"
+        ]
+      }
+    ]
+  },
+  "dashboards": [
+    {
+      "id": "overview",
+      "name": "Overview Dashboard",
+      "description": "Key metrics and performance",
+      "refresh_interval": "5m",
+      "charts": [
+        {
+          "name": "Pipeline Health",
+          "type": "gauge",
+          "metrics": ["pipeline_success_rate"],
+          "thresholds": {"good": 95, "warning": 85, "critical": 70}
+        },
+        {
+          "name": "Network Throughput",
+          "type": "area",
+          "metrics": ["data_processed_gb"],
+          "time_range": "24h"
+        },
+        {
+          "name": "Processing Time",
+          "type": "line",
+          "metrics": ["processing_time_seconds"],
+          "aggregation": "avg"
+        }
+      ]
+    },
+    {
+      "id": "performance",
+      "name": "Performance Analytics",
+      "description": "System performance metrics",
+      "refresh_interval": "1m",
+      "charts": [
+        {
+          "name": "CPU Utilization",
+          "type": "line",
+          "metrics": ["cpu_percentage"],
+          "breakdown": ["service_name"]
+        },
+        {
+          "name": "Pipeline Health",
+          "type": "stacked_area",
+          "metrics": ["memory_used_gb", "memory_available_gb"]
+        },
+        {
+          "name": "Network Throughput",
+          "type": "bar",
+          "metrics": ["network_in_mbps", "network_out_mbps"]
+        }
+      ]
+    },
+    {
+      "id": "data_quality",
+      "name": "Data Quality",
+      "description": "Data quality metrics",
+      "refresh_interval": "10m",
+      "charts": [
+        {
+          "name": "Data Validation",
+          "type": "pie",
+          "metrics": ["valid_records", "invalid_records"]
+        },
+        {
+          "name": "Duplicate Data",
+          "type": "trend",
+          "metrics": ["duplicate_count"]
+        },
+        {
+          "name": "Missing Values",
+          "type": "heatmap",
+          "dimensions": ["table_name", "column_name"],
+          "metrics": ["missing_percentage"]
+        }
+      ]
+    },
+    {
+      "id": "cost_analysis",
+      "name": "Cost Analysis",
+      "description": "Azure cost analytics",
+      "refresh_interval": "1h",
+      "charts": [
+        {
+          "name": "Memory Usage",
+          "type": "line",
+          "metrics": ["daily_cost_usd"],
+          "forecast": true
+        },
+        {
+          "name": "Service-wise Cost",
+          "type": "treemap",
+          "dimensions": ["service_name"],
+          "metrics": ["cost_usd"]
+        },
+        {
+          "name": "Daily Cost",
+          "type": "sparkline",
+          "metrics": ["cost_trend_percentage"]
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "name": "Pipeline Failure Alert",
+      "condition": "pipeline_success_rate < 90",
+      "severity": "critical",
+      "actions": ["email", "teams", "logic_app"]
+    },
+    {
+      "name": "Data Quality Alert",
+      "condition": "daily_cost_usd > 1000",
+      "severity": "warning",
+      "actions": ["email", "slack"]
+    },
+    {
+      "name": "Data Quality Alert",
+      "condition": "invalid_records > 1000",
+      "severity": "medium",
+      "actions": ["email"]
+    }
+  ],
+  "automation": {
+    "scheduled_reports": [
+      {
+        "name": "Daily Summary",
+        "schedule": "0 8 * * *",
+        "recipients": ["team@company.com"],
+        "format": "pdf"
+      },
+      {
+        "name": "Weekly Analytics",
+        "schedule": "0 9 * * 1",
+        "recipients": ["management@company.com"],
+        "format": "excel"
+      }
+    ],
+    "auto_scaling": {
+      "enabled": true,
+      "rules": [
+        {
+          "metric": "cpu_percentage",
+          "threshold": 80,
+          "action": "scale_out"
+        },
+        {
+          "metric": "cpu_percentage",
+          "threshold": 20,
+          "action": "scale_in"
+        }
+      ]
+    }
+  },
+  "integration": {
+    "power_bi": {
+      "enabled": true,
+      "workspace": "Data Analytics",
+      "dataset_sync": "15m"
+    },
+    "teams": {
+      "enabled": true,
+      "channel": "data-analytics",
+      "webhook_url": "https://your-teams-webhook"
+    },
+    "slack": {
+      "enabled": true,
+      "channel": "#data-alerts",
+      "webhook_url": "https://your-slack-webhook"
+    }
+  }
+}
