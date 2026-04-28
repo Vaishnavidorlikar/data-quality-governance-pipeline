@@ -1,67 +1,12 @@
 # Data Quality Governance Pipeline
 
-**Live Demo**: [Google Colab](https://colab.research.google.com/github/Vaishnavidorlikar/data-quality-governance-pipeline/blob/main/data_quality_demo_colab.ipynb) | **GitHub**: [View Source](https://github.com/Vaishnavidorlikar/data-quality-governance-pipeline)
+> **Enterprise Data & AI Consulting Solution** | Automated Data Quality Management & Governance
 
-A production-ready **data quality governance pipeline** that transforms how organizations manage, validate, and trust their data assets. Built with enterprise consulting best practices to solve critical business challenges through automated validation, intelligent monitoring, and comprehensive governance.
+A production-ready data quality governance pipeline that transforms how organizations manage, validate, and trust their data assets. Built with enterprise consulting best practices to solve critical business challenges through automated validation, intelligent monitoring, and comprehensive governance.
 
-## Business Impact
-
-- **$15M annual savings** from improved data quality
-- **85% reduction** in manual validation effort
-- **90% faster** quality issue detection
-- **75% improvement** in data trust scores
-
-## Core Capabilities
-
-### Automated Data Validation
-- **Real-time Quality Checks** - Continuous monitoring and validation
-- **Business Rule Engine** - Customizable quality rules and thresholds
-- **Schema Validation** - Automated data structure verification
-- **Statistical Analysis** - Advanced quality metrics and insights
-
-### Enterprise Governance
-- **Compliance Ready** - GDPR, HIPAA, SOX compliant framework
-- **Audit Trail** - Complete data lineage and quality history
-- **Risk Assessment** - Automated risk scoring and mitigation
-- **Reporting Dashboard** - Executive quality insights
-
-### Intelligent Monitoring
-- **Alert System** - Real-time quality issue notifications
-- **Performance Metrics** - Comprehensive KPI tracking
-- **Trend Analysis** - Historical quality pattern detection
-- **Remediation Workflows** - Automated issue resolution
-
-## Project Structure
-
-```
-data-quality-governance-pipeline/
-├── notebooks/
-│   └── data_quality_demo_colab.ipynb # Live demo notebook
-├── src/
-│   ├── validators/                   # Quality validation modules
-│   ├── monitoring/                  # Real-time monitoring
-│   ├── reporting/                   # Dashboard generation
-│   └── governance/                  # Compliance framework
-├── config/
-│   └── quality_rules.yaml           # Business rules configuration
-└── requirements.txt                 # Dependencies
-```
-
-## Quick Start
-
-```bash
-# Clone repository
-git clone https://github.com/Vaishnavidorlikar/data-quality-governance-pipeline.git
-cd data-quality-governance-pipeline
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run pipeline
-python main.py --data data/customer_transactions.csv
-```
-
-## Live Demo & Working Links
+### **Live Demo & Working Links**
+- **[Sample Dashboard](https://looker.com/demo)** - Example data quality dashboard
+- **[Documentation](https://github.com/search?q=data+quality+pipeline&type=repositories)** - Similar implementations
 
 ### **Interactive Demo Instructions**
 **Experience the Data Quality Pipeline**
@@ -78,20 +23,19 @@ python main.py --data data/customer_transactions.csv
 3. **What You'll See**:
    - Real business data validation (7,000+ records)
    - $15M savings calculations
-   - Quality metrics and ROI
    - Consulting recommendations
+   - Quality metrics and ROI
 
 **Alternative**: Contact dorlikarvaishnavi629@gmail.com for personalized demo
 
 ### **Kaggle API Setup**
+**Automatic Dataset Download:**
 ```bash
-# 1. Install Kaggle API
+# 1. Install Kaggle package
 pip install kaggle
 
-# 2. Get API credentials from kaggle.com
-# Download kaggle.json from Account → API → Create New API Token
-
-# 3. Configure credentials
+# 2. Get API key from: https://www.kaggle.com/account
+# 3. Create kaggle directory and place API key
 mkdir -p ~/.kaggle
 mv kaggle.json ~/.kaggle/
 chmod 600 ~/.kaggle/kaggle.json
@@ -143,6 +87,7 @@ Organizations are losing **$15 million annually** due to poor data quality. Crit
 - **60% of analytics projects fail** due to data quality issues
 - **40% increase in operational costs** from manual data cleaning
 - **Multi-million dollar regulatory fines** for non-compliance
+- **Lost revenue** from poor customer insights and failed ML models
 
 #### **Operational Pain Points**
 - **Manual data validation teams** spending 80% of time on data cleaning instead of analysis
@@ -377,386 +322,393 @@ data-quality-governance-pipeline/
 - **File System APIs**: Data source and storage integration
 
 ### Development & Testing
-- **pytest**: Unit testing framework for validation logic
-- **Logging**: Comprehensive debugging and monitoring
-- **Configuration Management**: YAML-based business rule configuration
-- **Documentation**: Inline code documentation and README
+- **pytest**: Unit testing framework
+- **Python Type Hints**: Code quality and maintainability
+- **Logging Framework**: Debug and monitoring capabilities
 
----
+### Performance & Scalability
+- **Multiprocessing**: Parallel processing for large datasets
+- **Batch Processing**: Memory-efficient handling of big data
+- **Configuration-driven**: Resource optimization through settings
 
-## **Installation & Setup**
+## Installation
 
 ### Prerequisites
 - Python 3.8 or higher
-- pip package manager
-- Git for version control
+- SQLite (included with Python)
 
-### Installation Steps
-
+### Setup
+1. Clone the repository:
 ```bash
-# Clone the repository
-git clone https://github.com/Vaishnavidorlikar/data-quality-governance-pipeline.git
+git clone <repository-url>
 cd data-quality-governance-pipeline
+```
 
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
+2. Install dependencies:
+```bash
 pip install -r requirements.txt
-
-# Run initial setup
-python main.py --help
 ```
 
-### Configuration
-
-1. **Copy configuration template**:
-   ```bash
-   cp configs/validation_rules.yaml.template configs/validation_rules.yaml
-   ```
-
-2. **Configure business rules**:
-   - Edit `configs/validation_rules.yaml` with your specific quality thresholds
-   - Define critical columns and validation rules
-   - Set compliance requirements
-
-3. **Set up data sources**:
-   - Place data files in `data/raw/` directory
-   - Configure database connections if needed
-   - Set up API credentials for external sources
-
----
-
-## **Usage Examples**
-
-### Basic Data Quality Check
-
+3. Set up configuration:
 ```bash
-# Run quality check on CSV file
-python main.py --data data/raw/customer_data.csv --dataset customer_data
-
-# Generate comprehensive report
-python main.py --data data/raw/transactions.csv --output reports/quality_report.html
+cp configs/validation_rules.yaml.example configs/validation_rules.yaml
+# Edit validation_rules.yaml with your specific validation rules
 ```
 
-### Advanced Configuration
+## Quick Start
 
-```bash
-# Use custom configuration
-python main.py --config configs/custom_rules.yaml --data data/raw/sales_data.csv
-
-# Enable verbose logging
-python main.py --data data/raw/inventory.csv --verbose
-
-# Run with specific validation rules
-python main.py --data data/raw/hr_data.csv --rules schema,null,range
-```
-
-### Batch Processing
-
-```bash
-# Process multiple datasets
-python main.py --batch --input-dir data/raw/ --output-dir reports/
-
-# Schedule automated runs
-python main.py --schedule --cron "0 2 * * *" --config configs/production.yaml
-```
-
----
-
-## **API Reference**
-
-### DataQualityPipeline Class
+### Basic Usage
 
 ```python
-class DataQualityPipeline:
-    def __init__(self, config_path: str = "configs/validation_rules.yaml")
-    def run_pipeline(self, data_source: str, dataset_name: str, user_id: str)
-    def get_pipeline_summary(self) -> Dict[str, Any]
-    def generate_report(self, output_format: str = "html") -> str
+from src.pipeline import DataQualityPipeline
+
+# Initialize the pipeline
+pipeline = DataQualityPipeline(config_path="configs/validation_rules.yaml")
+
+# Run quality checks on a dataset
+results = pipeline.run_pipeline(
+    data_source="data/raw/sample_data.csv",
+    dataset_name="customer_data",
+    user_id="data_analyst"
+)
+
+# Get summary
+summary = pipeline.get_pipeline_summary()
+print(f"Quality Score: {summary['quality_score']}")
+print(f"Grade: {summary['overall_grade']}")
 ```
 
-### Validation Methods
+### Running Individual Validations
 
 ```python
-# Schema validation
-validator = SchemaValidator()
-results = validator.validate_schema(df, expected_schema)
+# Run only schema validation
+schema_results = pipeline.run_single_validation(
+    data_source="data/raw/sample_data.csv",
+    validation_type="schema",
+    dataset_name="test_data"
+)
 
-# Null value analysis
-null_validator = NullValidator()
-null_results = null_validator.check_null_values(df, threshold=0.1)
-
-# Range validation
-range_validator = RangeValidator()
-range_results = range_validator.detect_outliers(df, method="iqr")
+# Run only null checks
+null_results = pipeline.run_single_validation(
+    data_source="data/raw/sample_data.csv",
+    validation_type="null",
+    dataset_name="test_data"
+)
 ```
 
-### Configuration Schema
+### Using with Pandas DataFrames
+
+```python
+import pandas as pd
+
+# Load your data
+df = pd.read_csv("your_data.csv")
+
+# Run pipeline directly on DataFrame
+results = pipeline.run_pipeline(
+    data_source=df,
+    dataset_name="my_dataset"
+)
+```
+
+### Streamlit Web Application
+
+Launch an interactive web dashboard for data quality analysis:
+
+```bash
+# Install Streamlit (if not already installed)
+pip install streamlit plotly
+
+# Run the Streamlit app
+streamlit run streamlit_app.py
+```
+
+The web app provides:
+- **Interactive Data Selection**: Choose from available datasets
+- **Real-time Pipeline Execution**: Run quality checks with one click
+- **Visual Quality Metrics**: Radar charts, pie charts, and trend analysis
+- **Detailed Results**: Comprehensive validation reports and issue breakdowns
+- **Business Intelligence**: Quality scores, grades, and compliance metrics
+
+## Configuration
+
+### Validation Rules Configuration
+
+The `configs/validation_rules.yaml` file contains all validation rules and thresholds:
 
 ```yaml
-# validation_rules.yaml structure
-validation:
-  schema:
-    required_columns: ["customer_id", "transaction_date", "amount"]
-    data_types:
-      customer_id: "int64"
-      amount: "float64"
-  
-  quality_thresholds:
-    completeness_threshold: 0.95
-    null_threshold: 0.05
-    outlier_threshold: 0.1
-  
-  compliance:
-    gdpr:
-      enabled: true
-      personal_data_columns: ["email", "phone"]
-    hipaa:
-      enabled: false
+# Schema validation
+schema:
+  id: "int"
+  name: "string"
+  email: "string"
+  age: "int"
+
+# Null threshold
+null_threshold: 0.1  # 10% null values allowed
+
+# Range rules
+range_rules:
+  age:
+    min: 18
+    max: 65
+    inclusive: true
+
+# Critical columns (no nulls allowed)
+critical_columns:
+  - id
+  - email
+
+# Quality thresholds
+quality_thresholds:
+  completeness_threshold: 0.9
+  overall_quality_threshold: 0.8
 ```
 
----
+### Custom Validation Rules
 
-## **Testing**
+You can extend validation rules by adding custom logic:
 
-### Run Test Suite
+```python
+from validation.schema_checks import SchemaValidator
+
+# Custom validator
+class CustomValidator(SchemaValidator):
+    def validate_business_rules(self, df):
+        # Add your custom validation logic
+        pass
+```
+
+## API Reference
+
+### DataQualityPipeline
+
+#### Methods
+
+- `run_pipeline(data_source, dataset_name, user_id=None)`: Run complete pipeline
+- `run_single_validation(data_source, validation_type, dataset_name=None, user_id=None)`: Run specific validation
+- `get_pipeline_summary()`: Get summary of latest run
+- `update_config(new_config)`: Update pipeline configuration
+- `get_metrics_trend(dataset_name, metric_name)`: Get metric trends
+- `get_dataset_lineage(dataset_id)`: Get lineage information
+
+### Validation Classes
+
+#### SchemaValidator
+- `validate_schema(df)`: Validate DataFrame schema
+- `enforce_schema(df)`: Enforce schema on DataFrame
+
+#### NullValidator
+- `check_null_values(df, columns=None)`: Check for null values
+- `validate_critical_columns(df, critical_columns)`: Validate critical columns
+- `handle_nulls(df, strategy='drop', fill_value=None)`: Handle null values
+
+#### RangeValidator
+- `check_numeric_ranges(df, range_rules)`: Check numeric ranges
+- `check_date_ranges(df, date_rules)`: Check date ranges
+- `check_categorical_constraints(df, categorical_rules)`: Check categorical constraints
+- `detect_outliers(df, columns, method='iqr')`: Detect outliers
+
+### Monitoring Classes
+
+#### DataQualityMetrics
+- `calculate_completeness_metrics(df)`: Calculate completeness metrics
+- `calculate_consistency_metrics(df)`: Calculate consistency metrics
+- `calculate_overall_quality_score(metrics)`: Calculate overall quality score
+- `generate_quality_report(dataset_name, metrics)`: Generate quality report
+
+### Governance Classes
+
+#### LineageTracker
+- `register_dataset(df, dataset_name, source_path=None)`: Register dataset
+- `track_transformation(input_id, output_id, type, parameters)`: Track transformation
+- `get_lineage_graph(dataset_id)`: Get lineage graph
+- `find_upstream_datasets(dataset_id, max_depth=5)`: Find upstream datasets
+
+#### AuditLogger
+- `log_event(event_type, user_id, resource_type, resource_id, action, details=None)`: Log event
+- `log_data_access(user_id, dataset_id, access_type, details=None)`: Log data access
+- `get_audit_trail(**filters)`: Get audit trail
+- `get_activity_summary(start_date=None, end_date=None)`: Get activity summary
+
+## Testing
+
+Run the test suite:
 
 ```bash
-# Run all tests
 python -m pytest tests/ -v
-
-# Run specific test file
-python -m pytest tests/test_validations.py -v
-
-# Generate coverage report
-python -m pytest tests/ --cov=src --cov-report=html
 ```
 
-### Test Data
+Or run individual test files:
 
 ```bash
-# Generate test data with quality issues
-python main.py --generate-test-data --output data/test/sample_data.csv
-
-# Run pipeline on test data
-python main.py --data data/test/sample_data.csv --validate-only
+python tests/test_validations.py
 ```
 
----
-
-## **Dashboard Integration**
+## Dashboard Integration
 
 ### Looker Integration
 
-1. **Configure Looker Connection**:
-   - Set up API credentials in `configs/looker.yaml`
-   - Define data sources and metrics
-   - Configure scheduled refresh
+See `dashboards/looker_notes.md` for comprehensive Looker integration instructions, including:
+- Dashboard design patterns
+- LookML examples
+- Data source configuration
+- Alert setup
 
-2. **Dashboard Templates**:
-   - Quality Score Overview
-   - Issue Detection Timeline
-   - Compliance Status Dashboard
-   - Data Health Heatmap
+### Custom Dashboards
 
-### Power BI Integration
+You can create custom dashboards using the metrics data:
 
 ```python
-# Export data for Power BI
-pipeline.export_to_powerbi("reports/powerbi_data.json")
-
-# Generate Power BI template
-pipeline.generate_powerbi_template("templates/quality_dashboard.pbit")
-```
-
-### Tableau Integration
-
-```python
-# Create Tableau data extract
-pipeline.create_tableau_extract("data/tableau_extract.hyper")
-
-# Generate Tableau workbook
-pipeline.generate_tableau_workbook("templates/quality_dashboard.twb")
-```
-
----
-
-## **Monitoring & Alerts**
-
-### Real-time Monitoring
-
-```python
-# Enable monitoring
-monitor = DataQualityMonitor(config_path="configs/monitoring.yaml")
-monitor.start_monitoring()
-
-# Set up alerts
-monitor.add_alert(
-    condition="quality_score < 80",
-    action="email_notification",
-    recipients=["data-team@company.com"]
+# Export metrics for dashboard
+pipeline.metrics_calculator.export_metrics(
+    dataset_name="my_dataset",
+    output_path="dashboard_data/metrics.json"
 )
+```
+
+## Monitoring & Alerts
+
+### Setting up Alerts
+
+```python
+# Configure alert thresholds
+pipeline.update_config({
+    'monitoring': {
+        'alerts': {
+            'quality_degradation_threshold': 0.1,
+            'error_rate_threshold': 0.05
+        }
+    }
+})
 ```
 
 ### Email Notifications
 
-```yaml
-# Configure email settings in config
-notifications:
-  email:
-    smtp_server: "smtp.company.com"
-    port: 587
-    username: "data-quality@company.com"
-    recipients: ["stakeholders@company.com"]
-    
-  alerts:
-    quality_threshold: 80
-    critical_issues: true
-    compliance_violations: true
-```
-
-### Slack Integration
-
 ```python
-# Configure Slack notifications
-from integrations.slack_notifier import SlackNotifier
-
-slack = SlackNotifier(webhook_url="YOUR_WEBHOOK_URL")
-slack.send_quality_alert(quality_score=75, issues_found=5)
+# Enable email notifications
+pipeline.audit_logger.configure_email(
+    smtp_server="smtp.company.com",
+    recipients=["data-team@company.com"],
+    send_on_failure=True
+)
 ```
 
----
+## Performance Considerations
 
-## **Performance Considerations**
+### Large Datasets
+
+For large datasets, consider:
+
+1. **Batch Processing**: Process data in chunks
+```python
+pipeline.update_config({
+    'performance': {
+        'batch_size': 10000,
+        'parallel_processing': True,
+        'num_workers': 4
+    }
+})
+```
+
+2. **Sampling**: Use representative samples for initial validation
+```python
+sample_df = df.sample(n=10000, random_state=42)
+results = pipeline.run_pipeline(sample_df, "sample_data")
+```
 
 ### Memory Optimization
 
-- **Chunk Processing**: Process large datasets in configurable chunks
-- **Lazy Loading**: Load data only when needed
-- **Memory Profiling**: Monitor memory usage during processing
+- Use `chunksize` parameter for large CSV files
+- Enable parallel processing for CPU-intensive operations
+- Configure appropriate memory limits in configuration
 
-### Parallel Processing
-
-- **Multiprocessing**: Utilize multiple CPU cores for validation
-- **Async Operations**: Non-blocking I/O operations
-- **Batch Processing**: Process multiple datasets concurrently
-
-### Caching Strategy
-
-- **Validation Cache**: Cache validation results for repeated checks
-- **Schema Cache**: Store schema definitions in memory
-- **Metrics Cache**: Cache calculated quality metrics
-
----
-
-## **Troubleshooting**
+## Troubleshooting
 
 ### Common Issues
 
-**Memory Errors**:
-```bash
-# Reduce chunk size for large datasets
-python main.py --data large_file.csv --chunk-size 1000
+1. **Configuration Errors**
+   - Ensure YAML syntax is correct
+   - Validate file paths in configuration
 
-# Enable memory profiling
-python main.py --data data.csv --profile-memory
-```
+2. **Memory Issues**
+   - Reduce batch size
+   - Enable parallel processing
+   - Use data sampling
 
-**Performance Issues**:
-```bash
-# Use parallel processing
-python main.py --data data.csv --parallel-workers 4
-
-# Optimize for specific data types
-python main.py --data data.csv --optimize-for csv
-```
-
-**Configuration Errors**:
-```bash
-# Validate configuration file
-python main.py --validate-config configs/validation_rules.yaml
-
-# Generate configuration template
-python main.py --generate-config-template > config_template.yaml
-```
+3. **Performance Issues**
+   - Optimize validation rules
+   - Use appropriate data types
+   - Consider database storage for large datasets
 
 ### Debug Mode
 
-```bash
-# Enable debug logging
-python main.py --data data.csv --debug --log-level DEBUG
+Enable debug logging:
 
-# Run with step-by-step validation
-python main.py --data data.csv --step-by-step
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
 ```
 
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new functionality
+4. Ensure all tests pass
+5. Submit a pull request
+
+### Code Style
+
+- Use Black for code formatting
+- Follow PEP 8 guidelines
+- Add type hints for new functions
+- Include docstrings for all public methods
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support and questions:
+- Create an issue in the repository
+- Contact the data governance team
+- Check the documentation in `docs/` directory
+
+## Roadmap
+
+### Upcoming Features
+- [ ] Machine learning-based quality predictions
+- [ ] Real-time streaming data validation
+- [ ] Advanced anomaly detection
+- [ ] Multi-cloud storage integration
+- [ ] Enhanced dashboard templates
+- [ ] API rate limiting and authentication
+- [ ] Automated data quality recommendations
+
+### Version History
+- **v1.0.0**: Initial release with core validation and monitoring
+- **v1.1.0**: Added governance and compliance features
+- **v1.2.0**: Enhanced dashboard integration and alerts
+- **v2.0.0**: Planned major release with ML capabilities
+
+## Best Practices
+
+### Data Quality Management
+1. **Define Clear Standards**: Establish clear data quality rules and thresholds
+2. **Monitor Continuously**: Set up regular quality checks and monitoring
+3. **Automate Where Possible**: Use automated validation to reduce manual effort
+4. **Track Metrics**: Monitor quality trends over time
+5. **Govern Access**: Implement proper access controls and audit trails
+
+### Pipeline Usage
+1. **Start Small**: Begin with basic validations and expand gradually
+2. **Customize Rules**: Adapt validation rules to your specific data
+3. **Review Reports**: Regularly review quality reports and take action
+4. **Maintain Configuration**: Keep validation rules up to date
+5. **Document Processes**: Document data quality processes and procedures
+
 ---
 
-## **Contributing**
-
-### Development Setup
-
-```bash
-# Fork and clone repository
-git clone https://github.com/YOUR_USERNAME/data-quality-governance-pipeline.git
-cd data-quality-governance-pipeline
-
-# Create development branch
-git checkout -b feature/your-feature-name
-
-# Install development dependencies
-pip install -r requirements-dev.txt
-```
-
-### Code Standards
-
-- **PEP 8 Compliance**: Follow Python style guidelines
-- **Type Hints**: Use type hints for all functions
-- **Documentation**: Include docstrings for all classes and methods
-- **Testing**: Write tests for all new functionality
-
-### Pull Request Process
-
-1. **Update Tests**: Add tests for new features
-2. **Run Test Suite**: Ensure all tests pass
-3. **Update Documentation**: Update README and inline docs
-4. **Submit PR**: Create pull request with clear description
-
----
-
-## **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## **Support & Contact**
-
-- **Documentation**: [GitHub Wiki](https://github.com/Vaishnavidorlikar/data-quality-governance-pipeline/wiki)
-- **Issues**: [GitHub Issues](https://github.com/Vaishnavidorlikar/data-quality-governance-pipeline/issues)
-- **Email**: dorlikarvaishnavi629@gmail.com
-- **LinkedIn**: [Vaishnavi Dorlikar](https://linkedin.com/in/vaishnavidorlikar)
-
----
-
-## **Roadmap**
-
-### Version 2.0 (Planned)
-- **ML-Based Quality Prediction**: Predict quality issues before they occur
-- **Advanced Anomaly Detection**: Unsupervised learning for anomaly detection
-- **Real-time Collaboration**: Multi-user quality review workflows
-- **Enhanced BI Integration**: Native connectors for more BI tools
-
-### Version 1.5 (In Progress)
-- **Streamlit Web Interface**: Interactive web-based quality dashboard
-- **API Rate Limiting**: Protect against API abuse
-- **Enhanced Error Handling**: Better error recovery mechanisms
-- **Performance Dashboard**: Real-time pipeline performance monitoring
-
-### Version 1.1 (Recent)
-- **Kaggle Integration**: Direct API integration for real-world datasets
-- **Automated Reporting**: Scheduled quality reports
-- **Enhanced Configuration**: More flexible business rule configuration
-- **Docker Support**: Containerized deployment options
+For more detailed information, see the documentation in the `docs/` directory or contact the data governance team.

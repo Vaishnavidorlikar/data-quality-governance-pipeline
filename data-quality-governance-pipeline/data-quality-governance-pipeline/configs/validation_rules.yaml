@@ -1,0 +1,197 @@
+# Data Quality Validation Rules Configuration
+# This file defines validation rules and thresholds for the data quality pipeline
+
+# Schema validation rules
+schema:
+  # Define expected columns and their data types
+  # Format: column_name: expected_data_type
+  # Supported types: int, float, string, boolean, datetime, date
+  example_schema:
+    id: "int"
+    name: "string"
+    email: "string"
+    age: "int"
+    salary: "float"
+    join_date: "datetime"
+    is_active: "boolean"
+
+# Null value validation threshold
+null_threshold: 0.1  # Maximum allowed proportion of null values (10%)
+
+# Critical columns that must not contain null values
+critical_columns:
+  - id
+  - email
+  - join_date
+
+# Numeric range validation rules
+range_rules:
+  # Format: column_name: {min: value, max: value, inclusive: true/false}
+  age:
+    min: 18
+    max: 65
+    inclusive: true
+  salary:
+    min: 20000
+    max: 200000
+    inclusive: true
+  experience_years:
+    min: 0
+    max: 50
+    inclusive: true
+
+# Date range validation rules
+date_rules:
+  # Format: column_name: {start_date: date, end_date: date}
+  join_date:
+    start_date: "2020-01-01"
+    end_date: "2024-12-31"
+  last_login:
+    start_date: "2023-01-01"
+    end_date: "2024-12-31"
+
+# Categorical constraint validation
+categorical_rules:
+  # Format: column_name: {allowed_values: [list], case_sensitive: true/false}
+  department:
+    allowed_values: ["Engineering", "Sales", "Marketing", "HR", "Finance", "Operations"]
+    case_sensitive: false
+  status:
+    allowed_values: ["active", "inactive", "pending", "terminated"]
+    case_sensitive: false
+  country:
+    allowed_values: ["US", "CA", "UK", "DE", "FR", "JP", "AU"]
+    case_sensitive: true
+
+# String constraint validation
+string_rules:
+  # Format: column_name: {min_length: int, max_length: int, pattern: regex}
+  email:
+    min_length: 5
+    max_length: 100
+    pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+  phone:
+    min_length: 10
+    max_length: 20
+    pattern: "^\\+?[\\d\\s\\-\\(\\)]{10,}$"
+  name:
+    min_length: 2
+    max_length: 50
+    pattern: "^[a-zA-Z\\s]+$"
+
+# Date columns for timeliness metrics
+date_columns:
+  - join_date
+  - last_login
+  - created_at
+  - updated_at
+
+# Data validation rules for validity metrics
+validation_rules:
+  # Format: column_name: {required: bool, data_type: type, min_length: int, max_length: int, allowed_values: [list]}
+  id:
+    required: true
+    data_type: "numeric"
+  email:
+    required: true
+    data_type: "email"
+    min_length: 5
+    max_length: 100
+  name:
+    required: true
+    data_type: "string"
+    min_length: 2
+    max_length: 50
+  age:
+    required: false
+    data_type: "numeric"
+    min: 18
+    max: 65
+  department:
+    required: false
+    data_type: "string"
+    allowed_values: ["Engineering", "Sales", "Marketing", "HR", "Finance", "Operations"]
+  phone:
+    required: false
+    data_type: "phone"
+    min_length: 10
+    max_length: 20
+
+# Outlier detection settings
+outlier_detection:
+  method: "iqr"  # Options: iqr, zscore, modified_zscore
+  threshold: 1.5  # Threshold for outlier detection
+  columns: ["age", "salary", "experience_years"]
+
+# Data quality thresholds
+quality_thresholds:
+  # Minimum acceptable quality scores
+  completeness_threshold: 0.9
+  accuracy_threshold: 0.95
+  consistency_threshold: 0.85
+  timeliness_threshold: 0.8
+  validity_threshold: 0.9
+  overall_quality_threshold: 0.8
+
+# Reporting settings
+reporting:
+  # Generate reports in multiple formats
+  formats: ["txt", "json", "html"]
+  # Include detailed statistics in reports
+  include_detailed_stats: true
+  # Generate trend analysis
+  include_trends: true
+  # Email notification settings
+  email_notifications:
+    enabled: false
+    recipients: ["data-quality-team@company.com"]
+    send_on_failure: true
+    send_on_warning: true
+
+# Compliance settings
+compliance:
+  # GDPR compliance settings
+  gdpr:
+    enabled: true
+    personal_data_columns: ["email", "name", "phone"]
+    retention_days: 2555  # 7 years
+  # HIPAA compliance settings (if applicable)
+  hipaa:
+    enabled: false
+    protected_health_info: []
+  # SOX compliance settings (if applicable)
+  sox:
+    enabled: false
+    financial_data_columns: []
+
+# Monitoring settings
+monitoring:
+  # Enable real-time monitoring
+  real_time: false
+  # Monitoring interval in minutes
+  interval: 60
+  # Alert thresholds
+  alerts:
+    quality_degradation_threshold: 0.1  # 10% drop in quality
+    error_rate_threshold: 0.05  # 5% error rate
+    data_volume_anomaly_threshold: 0.2  # 20% change in data volume
+
+# Data retention settings
+retention:
+  # How long to keep audit logs (days)
+  audit_log_retention: 365
+  # How long to keep quality metrics (days)
+  metrics_retention: 730
+  # How long to keep lineage data (days)
+  lineage_retention: 1095
+
+# Performance settings
+performance:
+  # Maximum number of rows to process in a single batch
+  batch_size: 10000
+  # Enable parallel processing
+  parallel_processing: true
+  # Number of parallel workers
+  num_workers: 4
+  # Memory limit in MB
+  memory_limit: 2048
