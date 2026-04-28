@@ -250,24 +250,31 @@ def display_quality_visualizations(results, summary):
         # 1. Bar chart for quality dimensions
         if 'metrics' in results and results['metrics']:
             metrics = results['metrics']
-            dimensions = ['Completeness', 'Accuracy', 'Consistency', 'Timeliness', 'Validity']
-            values = [
-                (metrics.get('completeness_score') or 0) * 100,
-                (metrics.get('accuracy_score') or 0) * 100,
-                (metrics.get('consistency_score') or 0) * 100,
-                (metrics.get('timeliness_score') or 0) * 100,
-                (metrics.get('validity_score') or 0) * 100
-            ]
-            fig.add_trace(
-                go.Bar(
-                    y=dimensions,
-                    x=values,
-                    orientation='h',
-                    marker=dict(color=values, colorscale='Viridis'),
-                    name='Quality Score'
-                ),
-                row=1, col=1
-            )
+            # Ensure metrics is a dictionary
+            if isinstance(metrics, dict):
+                dimensions = ['Completeness', 'Accuracy', 'Consistency', 'Timeliness', 'Validity']
+                values = [
+                    (metrics.get('completeness_score') or 0) * 100,
+                    (metrics.get('accuracy_score') or 0) * 100,
+                    (metrics.get('consistency_score') or 0) * 100,
+                    (metrics.get('timeliness_score') or 0) * 100,
+                    (metrics.get('validity_score') or 0) * 100
+                ]
+                fig.add_trace(
+                    go.Bar(
+                        y=dimensions,
+                        x=values,
+                        orientation='h',
+                        marker=dict(color=values, colorscale='Viridis'),
+                        name='Quality Score'
+                    ),
+                    row=1, col=1
+                )
+            else:
+                fig.add_trace(
+                    go.Bar(y=['No Data'], x=[0], name='Quality Score'),
+                    row=1, col=1
+                )
         else:
             fig.add_trace(
                 go.Bar(y=['No Data'], x=[0], name='Quality Score'),
@@ -278,7 +285,11 @@ def display_quality_visualizations(results, summary):
         if 'issues' in results and results['issues']:
             issue_types = {}
             for issue in results['issues']:
-                issue_type = issue.get('type', 'Unknown')
+                # Handle both dict and string types
+                if isinstance(issue, dict):
+                    issue_type = issue.get('type', 'Unknown')
+                else:
+                    issue_type = str(issue)
                 issue_types[issue_type] = issue_types.get(issue_type, 0) + 1
 
             if issue_types:
@@ -306,7 +317,11 @@ def display_quality_visualizations(results, summary):
             validation_results = results['validation_results']
             statuses = {}
             for result in validation_results:
-                status = result.get('status', 'Unknown')
+                # Handle both dict and string types
+                if isinstance(result, dict):
+                    status = result.get('status', 'Unknown')
+                else:
+                    status = str(result)
                 statuses[status] = statuses.get(status, 0) + 1
 
             if statuses:
