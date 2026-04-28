@@ -373,7 +373,10 @@ class DataQualityPipeline:
                             assessment['total_issues'] += category_results['total_violations']
         
         # Determine grade based on quality score
-        overall_score = quality_metrics.get('overall_quality_score', {}).get('overall_quality_score', 1.0)
+        overall_score = quality_metrics.get('overall_quality_score', 1.0)
+        if isinstance(overall_score, dict):
+            # Handle case where it might be a nested dict
+            overall_score = overall_score.get('overall_quality_score', 1.0)
         assessment['overall_grade'] = self.metrics_calculator._get_quality_grade(overall_score)
         
         # Generate recommendations
@@ -415,16 +418,23 @@ class DataQualityPipeline:
     def get_pipeline_summary(self) -> Dict[str, Any]:
         """Get a summary of the latest pipeline run."""
         if not self.pipeline_results:
-            return {'status': 'No pipeline run available'}
+            return {
+                'status': 'No pipeline run available',
+                'overall_status': 'UNKNOWN',
+                'quality_score': 0.0,
+                'overall_grade': 'N/A',
+                'total_issues': 0,
+                'critical_issues': 0
+            }
         
         return {
-            'dataset_name': self.pipeline_results.get('dataset_name'),
-            'overall_status': self.pipeline_results.get('overall_status'),
-            'overall_grade': self.pipeline_results.get('overall_assessment', {}).get('overall_grade'),
-            'quality_score': self.pipeline_results.get('quality_metrics', {}).get('overall_quality_score', {}).get('overall_quality_score'),
-            'total_issues': self.pipeline_results.get('overall_assessment', {}).get('total_issues'),
-            'critical_issues': self.pipeline_results.get('overall_assessment', {}).get('critical_issues'),
-            'timestamp': self.pipeline_results.get('timestamp')
+            'dataset_name': self.pipeline_results.get('dataset_name', 'Unknown'),
+            'overall_status': self.pipeline_results.get('overall_status', 'UNKNOWN'),
+            'overall_grade': self.pipeline_results.get('overall_assessment', {}).get('overall_grade', 'N/A'),
+            'quality_score': self.pipeline_results.get('quality_metrics', {}).get('overall_quality_score', 0.0),
+            'total_issues': self.pipeline_results.get('overall_assessment', {}).get('total_issues', 0),
+            'critical_issues': self.pipeline_results.get('overall_assessment', {}).get('critical_issues', 0),
+            'timestamp': self.pipeline_results.get('timestamp', 'N/A')
         }
     
     def run_single_validation(self, data_source: str, validation_type: str, 

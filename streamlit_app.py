@@ -117,6 +117,22 @@ def run_pipeline_analysis(data_source, dataset_name, user_id, config_path):
     """Run the data quality pipeline and display results."""
     try:
         with st.spinner("🔄 Running Data Quality Pipeline..."):
+            # Check if data source exists
+            if not os.path.exists(data_source):
+                st.error(f"❌ Data source not found: {data_source}")
+                st.info("Available datasets in data/kaggle/:")
+                kaggle_dir = "data/kaggle"
+                if os.path.exists(kaggle_dir):
+                    files = os.listdir(kaggle_dir)
+                    for f in files:
+                        st.text(f"  - {f}")
+                return
+            
+            # Check if config exists
+            if not os.path.exists(config_path):
+                st.warning(f"⚠️ Config file not found: {config_path}")
+                st.info("Using default configuration")
+            
             # Initialize pipeline
             pipeline = DataQualityPipeline(config_path=config_path)
 
@@ -129,6 +145,15 @@ def run_pipeline_analysis(data_source, dataset_name, user_id, config_path):
 
             # Get summary
             summary = pipeline.get_pipeline_summary()
+            
+            # Debug info
+            with st.expander("🔍 Debug Info"):
+                st.json({
+                    'data_source': data_source,
+                    'dataset_name': dataset_name,
+                    'config_path': config_path,
+                    'summary': summary
+                })
 
         st.success("✅ Pipeline completed successfully!")
 
@@ -205,23 +230,67 @@ def display_detailed_results(results):
     """Display detailed validation results."""
     st.markdown("### 🔍 Detailed Results")
 
+    if not results:
+        st.info("No results to display")
+        return
+
     # Validation Results
     if 'validation_results' in results and results['validation_results']:
         st.markdown("#### Validation Results")
         try:
-            validation_df = pd.DataFrame(results['validation_results'])
+            # Handle if validation_results is a dict of dicts
+            validation_data = results['validation_results']
+            if isinstance(validation_data, dict):
+                validation_df = pd.DataFrame([validation_data]).T
+            else:
+                validation_df = pd.DataFrame(validation_data)
             st.dataframe(validation_df, use_container_width=True)
         except Exception as e:
             st.warning(f"Could not display validation results: {e}")
+            st.json(validation_data)
 
     # Metrics
-    if 'metrics' in results and results['metrics']:
+    if 'quality_metrics' in results and results['quality_metrics']:
         st.markdown("#### Quality Metrics")
         try:
-            metrics_df = pd.DataFrame([results['metrics']])
+            metrics_dict = results['quality_metrics']
+            # Flatten nested structure if needed
+            metrics_flat = {}
+            for key, val in metrics_dict.items():
+                if isinstance(val, dict):
+                    for k, v in val.items():
+                        metrics_flat[f"{key}_{k}"] = v
+                else:
+                    metrics_flat[key] = val
+            
+            metrics_df = pd.DataFrame([metrics_flat])
             st.dataframe(metrics_df, use_container_width=True)
         except Exception as e:
             st.warning(f"Could not display metrics: {e}")
+            st.json(results.get('quality_metrics'))
+
+    # Overall Assessment
+    if 'overall_assessment' in results and results['overall_assessment']:
+        st.markdown("#### Overall Assessment")
+        try:
+            assessment = results['overall_assessment']
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Grade", assessment.get('overall_grade', 'N/A'))
+            with col2:
+                st.metric("Total Issues", assessment.get('total_issues', 0))
+            with col3:
+                st.metric("Critical Issues", assessment.get('critical_issues', 0))
+            with col4:
+                st.metric("Warnings", assessment.get('warnings', 0))
+            
+            if assessment.get('recommendations'):
+                st.markdown("**Recommendations:**")
+                for rec in assessment['recommendations']:
+                    st.write(f"- {rec}")
+        except Exception as e:
+            st.warning(f"Could not display assessment: {e}")
+            st.json(results.get('overall_assessment'))
 
     # Issues
     if 'issues' in results and results['issues']:
@@ -231,6 +300,7 @@ def display_detailed_results(results):
             st.dataframe(issues_df, use_container_width=True)
         except Exception as e:
             st.warning(f"Could not display issues: {e}")
+            st.json(results['issues'])
 
 def display_quality_visualizations(results, summary):
     """Display quality visualizations using Plotly."""
