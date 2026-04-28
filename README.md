@@ -411,6 +411,25 @@ results = pipeline.run_pipeline(
 )
 ```
 
+### Streamlit Web Application
+
+Launch an interactive web dashboard for data quality analysis:
+
+```bash
+# Install Streamlit (if not already installed)
+pip install streamlit plotly
+
+# Run the Streamlit app
+streamlit run streamlit_app.py
+```
+
+The web app provides:
+- **Interactive Data Selection**: Choose from available datasets
+- **Real-time Pipeline Execution**: Run quality checks with one click
+- **Visual Quality Metrics**: Radar charts, pie charts, and trend analysis
+- **Detailed Results**: Comprehensive validation reports and issue breakdowns
+- **Business Intelligence**: Quality scores, grades, and compliance metrics
+
 ## Configuration
 
 ### Validation Rules Configuration
