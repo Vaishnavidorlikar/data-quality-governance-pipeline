@@ -1,0 +1,218 @@
+# Data Quality Validation Rules Configuration
+# Business-friendly configuration for data quality governance
+
+# Validation Configuration
+validation:
+  # Schema Validation Rules
+  schema:
+    required_columns:
+      - customer_id
+      - transaction_date
+      - transaction_amount
+    data_types:
+      customer_id: "int64"
+      transaction_date: "datetime"
+      transaction_amount: "float64"
+  
+  # Null Value Validation Rules
+  null_checks:
+    null_threshold: 0.1  # 10% null values threshold
+    critical_columns:
+      - customer_id
+      - transaction_date
+    reporting_threshold: 0.05  # Report columns with >5% nulls
+  
+  # Range Validation Rules
+  range_checks:
+    method: "iqr"  # outlier detection method: iqr, zscore, isolation_forest
+    outlier_threshold: 1.5  # IQR multiplier for outlier detection
+    ranges:
+      transaction_amount:
+        min: 0
+        max: 1000000
+        allowed_values: null  # No specific allowed values
+      customer_age:
+        min: 18
+        max: 120
+      customer_income:
+        min: 0
+        max: 1000000
+
+# Quality Thresholds
+quality_thresholds:
+  completeness_threshold: 0.9  # 90% completeness required
+  accuracy_threshold: 0.85  # 85% accuracy required
+  consistency_threshold: 0.8  # 80% consistency required
+  timeliness_threshold: 0.75  # 75% timeliness required
+  overall_quality_threshold: 0.8  # 80% overall quality required
+
+# Scoring Weights
+scoring_weights:
+  completeness: 0.3
+  accuracy: 0.25
+  consistency: 0.2
+  timeliness: 0.15
+  validity: 0.1
+
+# Compliance Configuration
+compliance:
+  # GDPR Compliance
+  gdpr:
+    enabled: true
+    personal_data_columns:
+      - customer_id
+      - email
+      - phone
+    data_retention_days: 255
+    consent_required: false
+  
+  # HIPAA Compliance
+  hipaa:
+    enabled: false
+    protected_health_info: []
+    audit_trail_required: true
+  
+  # SOX Compliance
+  sox:
+    enabled: false
+    financial_reporting_required: false
+    audit_trail_required: true
+
+# Monitoring Configuration
+monitoring:
+  # Real-time Monitoring
+  real_time:
+    enabled: true
+    alert_thresholds:
+      quality_score: 70  # Alert when quality score drops below 70%
+      null_percentage: 15  # Alert when nulls exceed 15%
+      outlier_percentage: 10  # Alert when outliers exceed 10%
+  
+  # Performance Monitoring
+  performance:
+    memory_limit_mb: 1024  # Memory usage limit in MB
+    processing_timeout_seconds: 300  # Processing timeout in seconds
+    parallel_workers: 4  # Number of parallel workers
+
+# Reporting Configuration
+reporting:
+  # Report Generation
+  formats:
+    - "html"
+    - "json"
+    - "csv"
+    - "pdf"
+  
+  # Email Notifications
+  email:
+    enabled: false
+    smtp_server: ""
+    smtp_port: 587
+    username: ""
+    password: ""
+    recipients: []
+    templates:
+      quality_report: "quality_report_template.html"
+      alert_notification: "alert_template.html"
+  
+  # Dashboard Integration
+  dashboards:
+    looker:
+      enabled: false
+      api_url: ""
+      project_id: ""
+      schedule: "daily"
+    tableau:
+      enabled: false
+      server: ""
+      site: ""
+      workbook: ""
+    power_bi:
+      enabled: false
+      workspace: ""
+      dataset: ""
+      report: ""
+
+# Data Sources Configuration
+data_sources:
+  # File-based Sources
+  file_sources:
+    supported_formats:
+      - "csv"
+      - "xlsx"
+      - "json"
+      - "parquet"
+    default_encoding: "utf-8"
+    chunk_size: 10000  # Process files in chunks of 10k records
+  
+  # Database Sources
+  database_sources:
+    supported_types:
+      - "postgresql"
+      - "mysql"
+      - "sqlite"
+      - "sqlserver"
+    connection_timeout: 30
+  
+  # API Sources
+  api_sources:
+    supported_protocols:
+      - "rest"
+      - "graphql"
+      - "soap"
+    rate_limiting:
+      enabled: true
+      requests_per_minute: 100
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: null  # Log to file instead of console
+  max_size_mb: 100  # Maximum log file size in MB
+  rotation: true  # Rotate log files when they reach max size
+
+# Performance Optimization
+performance:
+  # Memory Management
+  memory:
+    optimization: "chunking"  # chunking, lazy_loading
+    garbage_collection: true
+    max_memory_usage: 0.8  # Use max 80% of available memory
+  
+  # Processing Optimization
+  processing:
+    parallel_processing: true
+    max_workers: 4
+    batch_size: 1000
+    caching: true
+    cache_ttl_minutes: 60
+  
+  # I/O Optimization
+  io:
+    async_operations: true
+    connection_pooling: true
+    timeout_seconds: 30
+
+# Security Configuration
+security:
+  # Access Control
+  access_control:
+    enabled: true
+    authentication_required: false
+    user_roles:
+      - "admin"
+      - "analyst"
+      - "viewer"
+  
+  # Data Encryption
+  encryption:
+    enabled: false
+    algorithm: "AES-256"
+    key_rotation_days: 90
+  
+  # Audit Security
+  audit:
+    immutable_logs: true  # Prevent log tampering
+    log_retention_days: 365
+    backup_frequency: "daily"
