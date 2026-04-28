@@ -1,0 +1,24 @@
+displayName: Real-time Streaming Pipeline
+gridLayout:
+  columns: "2"
+  widgets:
+  - title: Pub/Sub Message Count
+    xyChart:
+      dataSets:
+      - timeSeriesQuery:
+          prometheusQuerySource:
+            prometheusQuery: "pubsub.googleapis.com/topic/message_count"
+        plotType: LINE
+      timeshiftDuration: "0s"
+      yAxis:
+        scale: LINEAR
+  - title: Pub/Sub Publish Request Count
+    xyChart:
+      dataSets:
+      - timeSeriesQuery:
+          prometheusQuerySource:
+            prometheusQuery: "pubsub.googleapis.com/topic/publish_request_count"
+        plotType: LINE
+      timeshiftDuration: "0s"
+      yAxis:
+        scale: LINEAR
