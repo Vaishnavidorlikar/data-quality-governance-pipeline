@@ -149,14 +149,21 @@ def display_summary_metrics(summary):
     """Display key summary metrics in cards."""
     st.markdown("### 📈 Quality Summary")
 
-    col1, col2, col3, col4 = st.columns(4)
+    # Set default values for None values
+    overall_status = summary.get('overall_status', 'UNKNOWN') or 'UNKNOWN'
+    quality_score = summary.get('quality_score', 0.0) or 0.0
+    overall_grade = summary.get('overall_grade', 'N/A') or 'N/A'
+    total_issues = summary.get('total_issues', 0) or 0
+    critical_issues = summary.get('critical_issues', 0) or 0
+
+    col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
-        status_class = "status-good" if summary['overall_status'] == 'PASS' else "status-warning" if summary['overall_status'] == 'WARNING' else "status-critical"
+        status_class = "status-good" if overall_status == 'PASS' else "status-warning" if overall_status == 'WARNING' else "status-critical"
         st.markdown(f"""
         <div class="metric-card">
             <h4>Overall Status</h4>
-            <p class="{status_class}">{summary['overall_status']}</p>
+            <p class="{status_class}">{overall_status}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -164,16 +171,16 @@ def display_summary_metrics(summary):
         st.markdown(f"""
         <div class="metric-card">
             <h4>Quality Score</h4>
-            <p style="font-size: 1.5rem; font-weight: bold;">{summary['quality_score']:.3f}</p>
+            <p style="font-size: 1.5rem; font-weight: bold;">{quality_score:.3f}</p>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
-        grade_color = "#28a745" if summary['overall_grade'] in ['A', 'B'] else "#ffc107" if summary['overall_grade'] == 'C' else "#dc3545"
+        grade_color = "#28a745" if overall_grade in ['A', 'B'] else "#ffc107" if overall_grade == 'C' else "#dc3545"
         st.markdown(f"""
         <div class="metric-card">
             <h4>Grade</h4>
-            <p style="font-size: 1.5rem; font-weight: bold; color: {grade_color};">{summary['overall_grade']}</p>
+            <p style="font-size: 1.5rem; font-weight: bold; color: {grade_color};">{overall_grade}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -181,7 +188,16 @@ def display_summary_metrics(summary):
         st.markdown(f"""
         <div class="metric-card">
             <h4>Total Issues</h4>
-            <p style="font-size: 1.5rem; font-weight: bold;">{summary['total_issues']}</p>
+            <p style="font-size: 1.5rem; font-weight: bold;">{total_issues}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col5:
+        critical_color = "#dc3545" if critical_issues > 0 else "#28a745"
+        st.markdown(f"""
+        <div class="metric-card">
+            <h4>Critical Issues</h4>
+            <p style="font-size: 1.5rem; font-weight: bold; color: {critical_color};">{critical_issues}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -190,104 +206,157 @@ def display_detailed_results(results):
     st.markdown("### 🔍 Detailed Results")
 
     # Validation Results
-    if 'validation_results' in results:
+    if 'validation_results' in results and results['validation_results']:
         st.markdown("#### Validation Results")
-        validation_df = pd.DataFrame(results['validation_results'])
-        st.dataframe(validation_df, use_container_width=True)
+        try:
+            validation_df = pd.DataFrame(results['validation_results'])
+            st.dataframe(validation_df, use_container_width=True)
+        except Exception as e:
+            st.warning(f"Could not display validation results: {e}")
 
     # Metrics
-    if 'metrics' in results:
+    if 'metrics' in results and results['metrics']:
         st.markdown("#### Quality Metrics")
-        metrics_df = pd.DataFrame([results['metrics']])
-        st.dataframe(metrics_df, use_container_width=True)
+        try:
+            metrics_df = pd.DataFrame([results['metrics']])
+            st.dataframe(metrics_df, use_container_width=True)
+        except Exception as e:
+            st.warning(f"Could not display metrics: {e}")
 
     # Issues
-    if 'issues' in results:
+    if 'issues' in results and results['issues']:
         st.markdown("#### Detected Issues")
-        issues_df = pd.DataFrame(results['issues'])
-        st.dataframe(issues_df, use_container_width=True)
+        try:
+            issues_df = pd.DataFrame(results['issues'])
+            st.dataframe(issues_df, use_container_width=True)
+        except Exception as e:
+            st.warning(f"Could not display issues: {e}")
 
 def display_quality_visualizations(results, summary):
     """Display quality visualizations using Plotly."""
     st.markdown("### 📊 Quality Visualizations")
 
-    # Create subplots
-    fig = make_subplots(
-        rows=2, cols=2,
-        subplot_titles=('Quality Dimensions', 'Issue Distribution', 'Validation Status', 'Trend Analysis'),
-        specs=[[{'type': 'radar'}, {'type': 'pie'}],
-               [{'type': 'bar'}, {'type': 'scatter'}]]
-    )
-
-    # Radar chart for quality dimensions
-    if 'metrics' in results:
-        metrics = results['metrics']
-        categories = ['Completeness', 'Accuracy', 'Consistency', 'Timeliness', 'Validity']
-        values = [
-            metrics.get('completeness_score', 0) * 100,
-            metrics.get('accuracy_score', 0) * 100,
-            metrics.get('consistency_score', 0) * 100,
-            metrics.get('timeliness_score', 0) * 100,
-            metrics.get('validity_score', 0) * 100
-        ]
-
-        fig.add_trace(
-            go.Scatterpolar(
-                r=values,
-                theta=categories,
-                fill='toself',
-                name='Quality Score'
-            ),
-            row=1, col=1
+    try:
+        # Create subplots
+        fig = make_subplots(
+            rows=2, cols=2,
+            subplot_titles=('Quality Dimensions', 'Issue Distribution', 'Validation Status', 'Quality Trend'),
+            specs=[[{'type': 'bar'}, {'type': 'pie'}],
+                   [{'type': 'bar'}, {'type': 'scatter'}]],
+            vertical_spacing=0.15,
+            horizontal_spacing=0.12
         )
 
-    # Pie chart for issue distribution
-    if 'issues' in results and results['issues']:
-        issue_types = {}
-        for issue in results['issues']:
-            issue_type = issue.get('type', 'Unknown')
-            issue_types[issue_type] = issue_types.get(issue_type, 0) + 1
+        # 1. Bar chart for quality dimensions
+        if 'metrics' in results and results['metrics']:
+            metrics = results['metrics']
+            dimensions = ['Completeness', 'Accuracy', 'Consistency', 'Timeliness', 'Validity']
+            values = [
+                (metrics.get('completeness_score') or 0) * 100,
+                (metrics.get('accuracy_score') or 0) * 100,
+                (metrics.get('consistency_score') or 0) * 100,
+                (metrics.get('timeliness_score') or 0) * 100,
+                (metrics.get('validity_score') or 0) * 100
+            ]
+            fig.add_trace(
+                go.Bar(
+                    y=dimensions,
+                    x=values,
+                    orientation='h',
+                    marker=dict(color=values, colorscale='Viridis'),
+                    name='Quality Score'
+                ),
+                row=1, col=1
+            )
+        else:
+            fig.add_trace(
+                go.Bar(y=['No Data'], x=[0], name='Quality Score'),
+                row=1, col=1
+            )
 
+        # 2. Pie chart for issue distribution
+        if 'issues' in results and results['issues']:
+            issue_types = {}
+            for issue in results['issues']:
+                issue_type = issue.get('type', 'Unknown')
+                issue_types[issue_type] = issue_types.get(issue_type, 0) + 1
+
+            if issue_types:
+                fig.add_trace(
+                    go.Pie(
+                        labels=list(issue_types.keys()),
+                        values=list(issue_types.values()),
+                        name='Issues'
+                    ),
+                    row=1, col=2
+                )
+            else:
+                fig.add_trace(
+                    go.Pie(labels=['No Issues'], values=[1], name='Issues'),
+                    row=1, col=2
+                )
+        else:
+            fig.add_trace(
+                go.Pie(labels=['No Issues'], values=[1], name='Issues'),
+                row=1, col=2
+            )
+
+        # 3. Bar chart for validation status
+        if 'validation_results' in results and results['validation_results']:
+            validation_results = results['validation_results']
+            statuses = {}
+            for result in validation_results:
+                status = result.get('status', 'Unknown')
+                statuses[status] = statuses.get(status, 0) + 1
+
+            if statuses:
+                fig.add_trace(
+                    go.Bar(
+                        x=list(statuses.keys()),
+                        y=list(statuses.values()),
+                        name='Validation Status',
+                        marker=dict(color=['#28a745' if s == 'PASS' else '#ffc107' for s in statuses.keys()])
+                    ),
+                    row=2, col=1
+                )
+            else:
+                fig.add_trace(
+                    go.Bar(x=['No Data'], y=[0], name='Validation Status'),
+                    row=2, col=1
+                )
+        else:
+            fig.add_trace(
+                go.Bar(x=['No Data'], y=[0], name='Validation Status'),
+                row=2, col=1
+            )
+
+        # 4. Scatter plot for trend
+        quality_score = summary.get('quality_score', 0.5) or 0.5
         fig.add_trace(
-            go.Pie(
-                labels=list(issue_types.keys()),
-                values=list(issue_types.values()),
-                name='Issues'
+            go.Scatter(
+                x=[1, 2, 3, 4, 5],
+                y=[quality_score] * 5,
+                mode='lines+markers',
+                name='Quality Trend',
+                line=dict(color='#1f77b4', width=2),
+                marker=dict(size=8)
             ),
-            row=1, col=2
+            row=2, col=2
         )
 
-    # Bar chart for validation status
-    if 'validation_results' in results:
-        validation_results = results['validation_results']
-        statuses = {}
-        for result in validation_results:
-            status = result.get('status', 'Unknown')
-            statuses[status] = statuses.get(status, 0) + 1
+        # Update layout
+        fig.update_layout(height=800, showlegend=True)
+        fig.update_xaxes(title_text="Score", row=1, col=1)
+        fig.update_xaxes(title_text="Status", row=2, col=1)
+        fig.update_xaxes(title_text="Time Period", row=2, col=2)
+        fig.update_yaxes(title_text="Count", row=2, col=1)
+        fig.update_yaxes(title_text="Quality Score", row=2, col=2)
 
-        fig.add_trace(
-            go.Bar(
-                x=list(statuses.keys()),
-                y=list(statuses.values()),
-                name='Validation Status'
-            ),
-            row=2, col=1
-        )
+        st.plotly_chart(fig, use_container_width=True)
 
-    # Scatter plot for trend (placeholder - would need historical data)
-    fig.add_trace(
-        go.Scatter(
-            x=[1, 2, 3, 4, 5],
-            y=[summary['quality_score']] * 5,  # Placeholder
-            mode='lines+markers',
-            name='Quality Trend'
-        ),
-        row=2, col=2
-    )
-
-    # Update layout
-    fig.update_layout(height=800, showlegend=False)
-    st.plotly_chart(fig, use_container_width=True)
+    except Exception as e:
+        st.warning(f"⚠️ Could not generate visualizations: {e}")
+        st.info("💡 Tip: Run the pipeline with data to see visualizations.")
 
 if __name__ == "__main__":
     main()
