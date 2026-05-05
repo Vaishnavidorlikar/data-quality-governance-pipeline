@@ -1,0 +1,10 @@
+{
+    "python.defaultInterpreterPath": "python3",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
+    "files.associations": {
+        "*.ipynb": "jupyter"
+    },
+    "python.analysis.typeCheckingMode": "basic"
+}
