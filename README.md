@@ -8,7 +8,15 @@ Enterprise Data Quality & Governance Pipeline for Reliable Data Systems
 
 ## What it is
 
-An enterprise data platform for data quality, validation, monitoring, and governance. The system is configuration-driven and built to support real-world data engineering workflows.
+A production-grade data quality and governance pipeline designed to validate, monitor, and ensure reliability of data across batch and streaming systems.
+
+## Tech Stack
+
+- Python
+- Pandas / Data Processing
+- YAML (Config-driven validation)
+- Logging & Monitoring
+- Modular pipeline architecture
 
 ### Architecture
 
