@@ -13,7 +13,15 @@ An enterprise data platform for data quality, validation, monitoring, and govern
 ### Architecture
 
 ```text
-Data Source → Validation Engine → Metrics Store → Audit Logs → Reporting
+Data Source
+↓
+Validation Engine
+↓
+Metrics Store
+↓
+Audit Logs
+↓
+Reporting
 ```
 
 ### Key Capabilities
