@@ -4,7 +4,7 @@
 ![Domain](https://img.shields.io/badge/Domain-Data%20Engineering-green)
 ![Status](https://img.shields.io/badge/Project-Production%20Concept-orange)
 
-Designed for scalable, production-grade data systems handling high-throughput and reliable data processing.
+Enterprise Data Quality & Governance Pipeline for Reliable Data Systems
 
 ## What it is
 
