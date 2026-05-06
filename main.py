@@ -17,6 +17,7 @@ from typing import Optional, Dict, Any
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from src.pipeline import DataQualityPipeline
+from kaggle_data_loader import KaggleDataLoader
 
 
 def setup_logging(log_level: str = 'INFO', log_file: Optional[str] = None):
@@ -83,6 +84,47 @@ def create_sample_data(output_path: str = "data/raw/sample_data.csv"):
     print(f"Sample data created: {output_path}")
     print(f"Records: {len(df)}")
     print(f"Columns: {list(df.columns)}")
+
+
+def download_kaggle_dataset(args):
+    """Download a Kaggle dataset into the local data source directory."""
+    loader = KaggleDataLoader(data_dir=args.output_dir)
+
+    if args.all:
+        print("Downloading all configured Kaggle datasets...")
+        success = loader.auto_download_all_datasets()
+        if not success:
+            print("Kaggle download failed. Check API credentials and network connectivity.")
+        return success
+
+    if not args.dataset_key:
+        print("Please provide --dataset-key or use --all to download all datasets.")
+        return False
+
+    print(f"Downloading Kaggle dataset: {args.dataset_key}")
+    success = loader.download_dataset(args.dataset_key, force_download=args.force)
+    if not success:
+        print("Kaggle download failed. See log output for details.")
+        return False
+
+    print(f"Downloaded Kaggle dataset to {args.output_dir}")
+
+    if args.run_pipeline:
+        dataset_path = Path(args.output_dir) / loader.datasets[args.dataset_key]['local_name']
+        dataset_name = args.dataset_name or args.dataset_key
+        print(f"Running pipeline for downloaded dataset: {dataset_path}")
+        pipeline = DataQualityPipeline(config_path=args.config)
+        results = pipeline.run_pipeline(
+            data_source=str(dataset_path),
+            dataset_name=dataset_name,
+            user_id=args.user_id
+        )
+        print("\nPipeline completed for downloaded dataset.")
+        if args.verbose:
+            import json
+            print(json.dumps(results, indent=2, default=str))
+
+    return True
 
 
 def run_pipeline(args):
@@ -340,6 +382,21 @@ Examples:
     sample_parser = subparsers.add_parser('create-sample-data', help='Create sample data for testing')
     sample_parser.add_argument('--output', default='data/raw/sample_data.csv',
                               help='Path to save sample data')
+
+    # Kaggle dataset download command
+    kaggle_parser = subparsers.add_parser('kaggle', help='Download Kaggle dataset to local data source')
+    kaggle_parser.add_argument('--dataset-key', choices=['telco_churn', 'financial_transactions', 'bank_churn'],
+                               help='Key for configured Kaggle dataset to download')
+    kaggle_parser.add_argument('--all', action='store_true',
+                               help='Download all configured Kaggle datasets')
+    kaggle_parser.add_argument('--output-dir', default='data/kaggle',
+                               help='Target directory for downloaded datasets')
+    kaggle_parser.add_argument('--force', action='store_true',
+                               help='Force download even if dataset already exists')
+    kaggle_parser.add_argument('--run-pipeline', action='store_true',
+                               help='Run data quality pipeline after successful download')
+    kaggle_parser.add_argument('--dataset-name',
+                               help='Pipeline dataset name to use when running validation after download')
     
     # Metrics trend command
     trend_parser = subparsers.add_parser('trend', help='Show metrics trend')
@@ -378,6 +435,8 @@ Examples:
         run_validation(args)
     elif args.command == 'create-sample-data':
         create_sample_data(args.output)
+    elif args.command == 'kaggle':
+        download_kaggle_dataset(args)
     elif args.command == 'trend':
         show_metrics_trend(args)
     elif args.command == 'lineage':

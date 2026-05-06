@@ -2,6 +2,7 @@
 Main data quality governance pipeline orchestrator.
 """
 
+import json
 import pandas as pd
 import yaml
 import logging
@@ -161,6 +162,9 @@ class DataQualityPipeline:
             logger.error(f"Pipeline failed for {dataset_name}: {e}")
             self.pipeline_results['overall_status'] = 'failed'
             self.pipeline_results['error'] = str(e)
+
+            # Save structured error report for debugging
+            self._save_error_report(dataset_name, e)
             
             # Log error event
             self.audit_logger.log_event(
@@ -414,7 +418,24 @@ class DataQualityPipeline:
         self.lineage_tracker.export_lineage_report(self.current_dataset_id, str(lineage_report_path))
         
         logger.info(f"Reports generated for {dataset_name}")
-    
+
+    def _save_error_report(self, dataset_name: str, error: Exception) -> None:
+        """Save a structured error report for failed pipeline executions."""
+        report_path = Path(f"reports/error_reports/{dataset_name}_error_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+
+        error_report = {
+            'dataset_name': dataset_name,
+            'timestamp': datetime.now().isoformat(),
+            'error': str(error),
+            'pipeline_results': self.pipeline_results
+        }
+
+        with open(report_path, 'w') as f:
+            json.dump(error_report, f, indent=2, default=str)
+
+        logger.info(f"Saved error report for {dataset_name} to {report_path}")
+
     def get_pipeline_summary(self) -> Dict[str, Any]:
         """Get a summary of the latest pipeline run."""
         if not self.pipeline_results:
