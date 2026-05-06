@@ -1,8 +1,8 @@
 # Data Quality Governance Pipeline
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![Python](https://img.shields.io/badge/Python-3.9-blue)
 ![Domain](https://img.shields.io/badge/Domain-Data%20Engineering-green)
-![Status](https://img.shields.io/badge/Project-Production%20Concept-orange)
+![Type](https://img.shields.io/badge/Project-Data%20Platform-orange)
 
 Enterprise Data Quality & Governance Pipeline for Reliable Data Systems
 
